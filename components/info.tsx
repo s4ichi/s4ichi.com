@@ -1,18 +1,23 @@
+import Link from "next/link";
+
 export const name = "Takamasa Saichi";
 export const about = () => {
   return (
     <>
-      I{"'"}m s4ichi. I{"'"}m a Site Reliability Engineer at Cookpad Inc, and studying philosophy of programming
-      language and distributed systems.
+      Yo, I{"'"}m s4ichi. I currently working as a Site Reliability Engineer at Cookpad Inc, and studying philosophy of
+      programming language and distributed systems.
     </>
   );
 };
 export const bio = () => {
   return (
     <>
-      I{"'"}m working on improving the observability of production environments and building CI/CD environments. I also
-      studying on memory management of programming languages. I{"'"}m interested in memory management of dynamic
-      languages and static memory allocation.
+      I work as a software engineer and spend a lot of time working out, doing activities, listening to podcasts, and
+      going for walks. ISFJ-T on{" "}
+      <Link rel="noopener noreferrer" target="_blank" href="https://www.16personalities.com/">
+        16personalities
+      </Link>
+      .
     </>
   );
 };

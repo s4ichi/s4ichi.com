@@ -13,18 +13,17 @@ export default function About() {
     <section>
       <h1 className="font-bold text-3xl font-serif">About Me</h1>
       <p className="my-5 text-neutral-800 dark:text-neutral-200">
-        Hi, I{"'"}m Takamasa Saichi. as known as <b>s4ichi</b> online.
+        Hi, I{"'"}m Takamasa Saichi. also known as <b>s4cihi</b> on the web.
       </p>
-      <div className="prose prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
+      <div className="prose max-w-[770px] prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
         <p>
-          I currently work as a Site Reliability Engineer at Cookpad. I am a member of the team that provides the common
-          platform for Cookpad{"'"}s services. I focus on building CI/CD platform and observability features for
-          production environment.
+          Currently working as a Site Reliability Engineer at Cookpad. Focusing on improve the developer productibity
+          building such as CI/CD platform and observability features for production.
         </p>
+
         <p>
-          I{"'"}m also interested in the philosophy and implementation of programming languages. I have previously
-          studied the implementation of static memory allocation on cruby. I enjoy deciphering the implementation of the
-          programming language itself, as well as the various software in general that surrounds it.
+          Rubyist, Rustacean. Studying on memory management of programming languages. Concerned with memory management
+          of dynamic languages and optimizing just in time memory allocation.
         </p>
 
         <div className="flex flex-col gap-2 mt-4 mb-4 md:flex-row md:gap-2">
@@ -98,9 +97,7 @@ export default function About() {
             <ArrowUpRightIcon className="h-4 mr-2 text-gray-500" />
           </Link>
         </div>
-
         <hr />
-
         <h2 className="prose-h2 font-bold text-xl font-serif">Experience</h2>
         <ul className="list-disc">
           <li>
@@ -142,9 +139,66 @@ export default function About() {
           </li>
         </ul>
 
-        <h2 className="prose-h2 font-bold text-xl font-serif">Publication/Talk</h2>
+        <h2 className="prose-h2 font-bold text-xl font-serif">Writes/Talks</h2>
         <ul className="list-disc">
-          <li>TBD</li>
+          <li>
+            <b>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://www.youtube.com/live/BRbKH1TVsUQ?feature=share"
+              >
+                Cookpad Lounge #17 〜Ruby コミッター×プロダクト開発エンジニア座談会〜
+              </Link>
+            </b>
+          </li>
+          <li>
+            <b>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://techlife.cookpad.com/entry/2023/01/18/115104"
+              >
+                クックパッド開発者ブログ: AWS re:Invent 2022 に参加してきました
+              </Link>
+            </b>
+          </li>
+          <li>
+            <b>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://techlife.cookpad.com/entry/2022/11/07/124025"
+              >
+                クックパッド開発者ブログ: Amazon ECS と AWS Lambda で汎用 self-hosted runner を提供する基盤
+              </Link>
+            </b>
+          </li>
+          <li>
+            <b>
+              <Link rel="noopener noreferrer" target="_blank" href="https://kaigionrails.org/2021/talks/s4ichi/">
+                Kaigi on Rails 2021: メトリクス可視化から始める Rails ウェブサーバーのチューニング
+              </Link>
+            </b>
+          </li>
+          <li>
+            <b>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://www.youtube.com/live/c_yBVmq-VcA?feature=share"
+              >
+                Cookpad Lounge #7 世界最大級のモノリスcookpad_allどうする会議
+              </Link>
+            </b>
+          </li>
+          <li>
+            <b>
+              <Link rel="noopener noreferrer" target="_blank" href="http://id.nii.ac.jp/1001/00207288/">
+                情報処理学会論文誌プログラミング（PRO）: 実行時リージョン解析による動的言語Rubyのメモリ割付け最適化
+              </Link>
+            </b>
+          </li>
         </ul>
       </div>
     </section>
