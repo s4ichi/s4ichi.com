@@ -32,7 +32,7 @@ export default function About() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://github.com/s4ichi"
-            className="flex w-1/3 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
+            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
           >
             <div className="flex items-center">
               <div className="ml-3">GitHub</div>
@@ -43,7 +43,7 @@ export default function About() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://twitter.com/s4ichi"
-            className="flex w-1/3 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
+            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
           >
             <div className="flex items-center">
               <div className="ml-3">Twitter</div>
@@ -54,7 +54,7 @@ export default function About() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://speakerdeck.com/s4ichi"
-            className="flex w-1/3 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
+            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
           >
             <div className="flex items-center">
               <div className="ml-3">Speaker Deck</div>
@@ -68,7 +68,7 @@ export default function About() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://www.linkedin.com/in/s4ichi/"
-            className="flex w-1/3 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
+            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
           >
             <div className="flex items-center">
               <div className="ml-3">LinkedIn</div>
@@ -79,7 +79,7 @@ export default function About() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://mastodon.cloud/@s4ichi"
-            className="flex w-1/3 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
+            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
           >
             <div className="flex items-center">
               <div className="ml-3">Mastodon</div>
@@ -90,7 +90,7 @@ export default function About() {
             rel="noopener noreferrer"
             target="_blank"
             href="https://discordapp.com/users/s4ichi"
-            className="flex w-1/3 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
+            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
           >
             <div className="flex items-center">
               <div className="ml-3">Discord</div>
