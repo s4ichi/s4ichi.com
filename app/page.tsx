@@ -13,7 +13,7 @@ export default async function HomePage() {
       <p className="my-5 max-w-[580px] text-neutral-800 dark:text-neutral-200">{about()}</p>
       <div className="flex items-start md:items-center my-8 flex-row">
         <Image alt={name} className="flex rounded-full" src={s4ichiAvatar} placeholder="blur" width={100} priority />
-        <div className="mt-8 md:mt-0 ml-0 md:ml-6 space-y-2 text-neutral-500 dark:text-neutral-400"></div>
+        <div className="mt-8 md:mt-0 ml-3 md:ml-6 space-y-2 text-neutral-500 dark:text-neutral-400"></div>
         <Image alt={name} className="flex rounded-full" src={s4ichiSelfy} placeholder="blur" width={100} priority />
         <div className="mt-8 md:mt-0 ml-0 md:ml-6 space-y-2 text-neutral-500 dark:text-neutral-400"></div>
       </div>
