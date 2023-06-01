@@ -88,11 +88,11 @@ export default function About() {
           <Link
             rel="noopener noreferrer"
             target="_blank"
-            href="https://discordapp.com/users/s4ichi"
+            href="https://www.docswell.com/user/s4ichi"
             className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
           >
             <div className="flex items-center">
-              <div className="ml-3">Discord</div>
+              <div className="ml-3">Docswell</div>
             </div>
             <ArrowUpRightIcon className="h-4 mr-2 text-gray-500" />
           </Link>
@@ -141,6 +141,17 @@ export default function About() {
 
         <h2 className="prose-h2 font-bold text-xl font-sans">Writes/Talks</h2>
         <ul className="list-disc">
+          <li>
+            <b>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://www.docswell.com/s/s4ichi/5RXQLG-cookpad-self-hosted-runner-infra"
+              >
+                CI/CD Test Night #6 「開発者体験を改善し続けるための Self-hosted runner 運用基盤」
+              </Link>
+            </b>
+          </li>
           <li>
             <b>
               <Link
