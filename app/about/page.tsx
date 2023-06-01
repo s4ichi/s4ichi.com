@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function About() {
   return (
     <section>
-      <h1 className="font-bold text-3xl font-serif">About Me</h1>
+      <h1 className="font-bold text-3xl font-sans">About Me</h1>
       <p className="my-5 text-neutral-800 dark:text-neutral-200">
         Hi, I{"'"}m Takamasa Saichi. also known as <b>s4cihi</b> on the web.
       </p>
@@ -98,7 +98,7 @@ export default function About() {
           </Link>
         </div>
         <hr />
-        <h2 className="prose-h2 font-bold text-xl font-serif">Experience</h2>
+        <h2 className="prose-h2 font-bold text-xl font-sans">Experience</h2>
         <ul className="list-disc">
           <li>
             <b>Software Engineer / Site Reliability Engineer @ Cookpad Inc.</b>
@@ -121,7 +121,7 @@ export default function About() {
             2014/04 - 2016/07
           </li>
         </ul>
-        <h2 className="prose-h2 font-bold text-xl font-serif">Education</h2>
+        <h2 className="prose-h2 font-bold text-xl font-sans">Education</h2>
         <ul className="list-disc">
           <li>
             <b>University of Tsukuba</b>
@@ -139,7 +139,7 @@ export default function About() {
           </li>
         </ul>
 
-        <h2 className="prose-h2 font-bold text-xl font-serif">Writes/Talks</h2>
+        <h2 className="prose-h2 font-bold text-xl font-sans">Writes/Talks</h2>
         <ul className="list-disc">
           <li>
             <b>

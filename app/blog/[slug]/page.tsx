@@ -1,9 +1,9 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Head from "next/head";
-import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { allBlogs } from "contentlayer/generated";
+import { getMDXComponent } from "next-contentlayer/hooks";
 
 type BlogPageProps = {
   params: {
@@ -35,25 +35,21 @@ export default async function Blog({ params }: BlogPageProps) {
     return notFound();
   }
 
+  const MDXComponent = getMDXComponent(blog.body.code);
+
   return (
-    <>
-      <Head>
-        <title>{blog.title}</title>
-      </Head>
-      <article className="mx-auto max-w-2xl py-16">
-        <div className="mb-6 text-center">
-          <Link href="/" className="text-center text-sm font-bold uppercase text-blue-700">
-            Home
-          </Link>
+    <section>
+      <Link key={blog.slug} href={`/blog/${blog.slug}`}>
+        <div className="max-w-[750px]">
+          <h1 className="font-bold text-3xl font-sans">{blog.title}</h1>
         </div>
-        <div className="mb-6 text-center">
-          <h1 className="mb-1 text-3xl font-bold">{blog.title}</h1>
-          <time dateTime={blog.date} className="text-sm text-slate-600">
-            {format(parseISO(blog.date), "LLLL d, yyyy")}
-          </time>
-        </div>
-        <div className="cl-blog-body" dangerouslySetInnerHTML={{ __html: blog.body.html }} />
+      </Link>
+      <time dateTime={blog.date} className="text-sm text-slate-600">
+        {format(parseISO(blog.date), "LLLL d, yyyy")}
+      </time>
+      <article className="prose max-w-[750px] prose-quoteless prose-neutral dark:prose-invert">
+        <MDXComponent />
       </article>
-    </>
+    </section>
   );
 }
