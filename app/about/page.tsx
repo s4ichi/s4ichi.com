@@ -206,7 +206,18 @@ export default function About() {
           <li>
             <b>
               <Link rel="noopener noreferrer" target="_blank" href="http://id.nii.ac.jp/1001/00207288/">
-                情報処理学会論文誌プログラミング（PRO）: 実行時リージョン解析による動的言語Rubyのメモリ割付け最適化
+                情報処理学会論文誌プログラミング: 実行時リージョン解析による動的言語Rubyのメモリ割付け最適化
+              </Link>
+            </b>
+          </li>
+          <li>
+            <b>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://engineering.mercari.com/blog/entry/2018-09-04-100000/"
+              >
+                Custom Controller で Kubernetes の上の TLS 証明書を監視する
               </Link>
             </b>
           </li>
