@@ -4,8 +4,8 @@ export const name = "Takamasa Saichi";
 export const about = () => {
   return (
     <>
-      Yo, I{"'"}m s4ichi. I currently working as a Site Reliability Engineer at Cookpad Inc, and studying philosophy of
-      programming language and distributed systems.
+      Yo, I{"'"}m s4ichi. I currently working as a Site Reliability Engineer at Finatext Holdings Ltd., and studying
+      philosophy of programming language and distributed systems.
     </>
   );
 };

@@ -17,8 +17,8 @@ export default function About() {
       </p>
       <div className="prose max-w-[770px] prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
         <p>
-          Currently working as a Site Reliability Engineer at Cookpad. Focusing on improve the developer productibity
-          building such as CI/CD platform and observability features for production.
+          Currently working as a Site Reliability Engineer at Finatext Holdings Ltd. Focusing on improve the developer
+          productibity building such as CI/CD platform and observability features for production.
         </p>
 
         <p>
@@ -101,9 +101,14 @@ export default function About() {
         <h2 className="prose-h2 font-bold text-xl font-sans">Experience</h2>
         <ul className="list-disc">
           <li>
+            <b>Software Engineer @ Finatext Holdings Ltd.</b>
+            <br />
+            2023/09 - Present
+          </li>
+          <li>
             <b>Software Engineer / Site Reliability Engineer @ Cookpad Inc.</b>
             <br />
-            2017/06 - Present
+            2017/06 - 2023/08
           </li>
           <li>
             <b>Software Engineer (Internship) @ Mercari Inc.</b>
