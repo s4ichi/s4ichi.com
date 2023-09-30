@@ -17,7 +17,7 @@ export default function About() {
       </p>
       <div className="prose max-w-[770px] prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
         <p>
-          Currently working as a Site Reliability Engineer at Finatext Holdings Ltd. Focusing on improve the developer
+          Currently working as a Site Reliability Engineer at Finatext Ltd. Focusing on improve the developer
           productibity building such as CI/CD platform and observability features for production.
         </p>
 
