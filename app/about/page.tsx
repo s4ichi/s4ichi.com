@@ -3,9 +3,19 @@ import type { Metadata } from "next";
 import { description } from "components/metadata";
 import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
 
+const title = "About";
+
 export const metadata: Metadata = {
-  title: "About - s4ichi.com",
-  description: description,
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+  },
+  twitter: {
+    title,
+    description,
+  },
 };
 
 export default function About() {

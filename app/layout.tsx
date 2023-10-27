@@ -4,6 +4,7 @@ import Sidebar from "components/sidebar";
 import { title, description } from "components/metadata";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://s4ichi.com'),
   title: {
     default: title,
     template: "%s | Takamasa Saichi",
@@ -16,12 +17,11 @@ export const metadata: Metadata = {
     siteName: title,
     images: [
       {
-        url: "https://s4ichi.com/og.jpg",
+        url: "/og.jpg",
         width: 1920,
         height: 1080,
       },
     ],
-    locale: "en-US",
     type: "website",
   },
   robots: {
@@ -36,8 +36,17 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: "@s4ichi",
+    title: title,
+    description: description,
     card: "summary_large_image",
+    site: "@s4ichi",
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1920,
+        height: 1080,
+      },
+    ],
   },
   icons: {
     shortcut: "/favicon.ico",

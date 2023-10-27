@@ -22,6 +22,11 @@ export const Blog = defineDocumentType(() => ({
       description: 'The date of the blog',
       required: true,
     },
+    summary: {
+      type: 'string',
+      description: 'The summary of the blog',
+      required: true,
+    },
   },
   computedFields: {
     url: {

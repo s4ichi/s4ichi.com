@@ -1,6 +1,23 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { format, parseISO } from "date-fns";
 import { allBlogs } from "contentlayer/generated";
+
+const title = "Blog";
+const description = "List of pages where I have written down tech, thoughts, etc";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+  },
+  twitter: {
+    title,
+    description,
+  },
+};
 
 export default function BlogList() {
   return (

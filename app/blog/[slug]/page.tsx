@@ -22,10 +22,20 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   if (!blog) {
     return;
   }
-  const { title } = blog;
 
   return {
-    title,
+    title: blog.title,
+    description: blog.summary,
+    openGraph: {
+      type: "article",
+      title: blog.title,
+      publishedTime: blog.date,
+      url: `https://s4ichi.com${blog.url}`,
+    },
+    twitter: {
+      title: blog.title,
+      description: blog.summary,
+    }
   };
 }
 
