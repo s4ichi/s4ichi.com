@@ -1,29 +1,17 @@
 import "./global.css";
 import type { Metadata } from "next";
 import Sidebar from "components/sidebar";
-import { title, description } from "components/metadata";
+import { defaultTitle, defaultDescription, openGraph, twitter } from "components/metadata";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://s4ichi.com'),
+  metadataBase: new URL("https://s4ichi.com"),
   title: {
-    default: title,
+    default: defaultTitle,
     template: "%s | Takamasa Saichi",
   },
-  description: description,
-  openGraph: {
-    title: title,
-    description: description,
-    url: "https://s4ichi.com",
-    siteName: title,
-    images: [
-      {
-        url: "/og.jpg",
-        width: 1920,
-        height: 1080,
-      },
-    ],
-    type: "website",
-  },
+  description: defaultDescription,
+  openGraph: openGraph(),
+  twitter: twitter(),
   robots: {
     index: true,
     follow: true,
@@ -34,19 +22,6 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
-  twitter: {
-    title: title,
-    description: description,
-    card: "summary_large_image",
-    site: "@s4ichi",
-    images: [
-      {
-        url: "/og.jpg",
-        width: 1920,
-        height: 1080,
-      },
-    ],
   },
   icons: {
     shortcut: "/favicon.ico",

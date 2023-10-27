@@ -1,21 +1,16 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { description } from "components/metadata";
+import { defaultDescription } from "components/metadata";
 import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
+import { openGraph, twitter } from "components/metadata";
 
 const title = "About";
 
 export const metadata: Metadata = {
   title,
-  description,
-  openGraph: {
-    title,
-    description,
-  },
-  twitter: {
-    title,
-    description,
-  },
+  description: defaultDescription,
+  openGraph: openGraph(title, defaultDescription, "website"),
+  twitter: twitter(title, defaultDescription),
 };
 
 export default function About() {

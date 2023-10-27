@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { allBlogs } from "contentlayer/generated";
 import { getMDXComponent } from "next-contentlayer/hooks";
+import { openGraph, twitter } from "components/metadata";
 
 type BlogPageProps = {
   params: {
@@ -26,16 +27,8 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   return {
     title: blog.title,
     description: blog.summary,
-    openGraph: {
-      type: "article",
-      title: blog.title,
-      publishedTime: blog.date,
-      url: `https://s4ichi.com${blog.url}`,
-    },
-    twitter: {
-      title: blog.title,
-      description: blog.summary,
-    }
+    openGraph: openGraph(blog.title, blog.summary, "article", `https://s4ichi.com${blog.url}`),
+    twitter: twitter(blog.title, blog.summary),
   };
 }
 
