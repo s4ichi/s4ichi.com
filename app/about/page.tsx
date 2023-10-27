@@ -101,7 +101,7 @@ export default function About() {
         <h2 className="prose-h2 font-bold text-xl font-sans">Experience</h2>
         <ul className="list-disc">
           <li>
-            <b>Software Engineer @ Finatext Holdings Ltd.</b>
+            <b>Software Engineer @ Finatext Ltd.</b>
             <br />
             2023/09 - Present
           </li>
