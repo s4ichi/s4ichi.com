@@ -18,12 +18,12 @@ export default function About() {
     <section>
       <h1 className="font-bold text-3xl font-sans">About Me</h1>
       <p className="my-5 text-neutral-800 dark:text-neutral-200">
-        Hi, I{"'"}m Takamasa Saichi. also known as <b>s4cihi</b> on the web.
+        Yo, I{"'"}m Takamasa Saichi. also known as <b>s4cihi</b> on the web.
       </p>
       <div className="prose max-w-[770px] prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
         <p>
-          Currently working as a Site Reliability Engineer at Finatext Ltd. Focusing on improve the developer
-          productibity building such as CI/CD platform and observability features for production.
+          Currently working as a Software Engineer at Finatext Ltd. Focusing on improve the developer productibity
+          building such as CI/CD platform and observability features for production.
         </p>
 
         <p>

@@ -11,13 +11,13 @@ export default async function HomePage() {
     <section>
       <h1 className="font-bold text-3xl font-sans">{name}</h1>
       <p className="my-5 max-w-[580px] text-neutral-800 dark:text-neutral-200">{about()}</p>
+      <p className="my-5 max-w-[600px] text-neutral-800 dark:text-neutral-200">{bio()}</p>
       <div className="flex items-start md:items-center my-8 flex-row">
         <Image alt={name} className="flex rounded-full" src={s4ichiAvatar} placeholder="blur" width={100} priority />
         <div className="mt-8 md:mt-0 ml-3 md:ml-6 space-y-2 text-neutral-500 dark:text-neutral-400"></div>
         <Image alt={name} className="flex rounded-full" src={s4ichiSelfy} placeholder="blur" width={100} priority />
         <div className="mt-8 md:mt-0 ml-0 md:ml-6 space-y-2 text-neutral-500 dark:text-neutral-400"></div>
       </div>
-      <p className="my-5 max-w-[600px] text-neutral-800 dark:text-neutral-200">{bio()}</p>
       <ul className="flex flex-col md:flex-row mt-8 space-x-0 md:space-x-4 space-y-2 md:space-y-0 font-sm text-neutral-500 dark:text-neutral-400">
         <li>
           <Link
