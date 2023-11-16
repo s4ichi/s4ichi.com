@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const name = "Takamasa Saichi";
 export const about = () => {
-  return <>This is Takamasa Saichi (@s4ichi)'s personal web site.</>;
+  return <>{"This is Takamasa Saichi (@s4ichi)'s personal web site."}</>;
 };
 export const bio = () => {
   return (
