@@ -1,4 +1,6 @@
 import remarkGfm from 'remark-gfm';
+import remarkEmbedder from '@remark-embedder/core'
+import oembedTransformer from '@remark-embedder/transformer-oembed'
 import rehypeSlug from 'rehype-slug';
 import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -44,7 +46,26 @@ export default makeSource({
   contentDirPath: 'content',
   documentTypes: [Blog],
   mdx: {
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [
+      remarkGfm,
+      [
+        remarkEmbedder.default,
+        {
+          transformers: [
+            [
+              oembedTransformer.default,
+              {
+                params: {
+                  dnt: true,
+                  theme: 'dark',
+                  omit_script: true,
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    ],
     rehypePlugins: [
       rehypeSlug,
       rehypeAccessibleEmojis,
