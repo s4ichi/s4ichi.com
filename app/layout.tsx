@@ -2,6 +2,7 @@ import "./global.css";
 import type { Metadata } from "next";
 import Sidebar from "components/sidebar";
 import { defaultTitle, defaultDescription, openGraph, twitter } from "components/metadata";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://s4ichi.com"),
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased max-w-5xl mb-40 flex flex-col md:flex-row mx-4 mt-8 md:mt-20 lg:mt-32 lg:mx-auto">
         <Sidebar />
         <main className="flex-auto min-w-0 mt-6 md:mt-0 flex flex-col px-2 md:px-0">{children}</main>
+        <Analytics />
       </body>
     </html>
   );
