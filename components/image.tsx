@@ -1,5 +1,5 @@
 import self from "../app/takamasa.jpg";
-import avatar from "../app/avatar.jpg";
+import avatar from "../app/s4ichi2024.png";
 import color from "../app/color.jpg";
 
 export const s4ichiSelfy = self;
