@@ -1,0 +1,156 @@
+---
+title: MySQL と txdb を使ったテストの並列実行で見られる deadlock を理解する
+date: 2024-06-27
+summary: Golang で txdb （バックエンドに MyuSQL）を使い Parallel なテスト実行をしていると、規模が大きくなるにつれて deadlock に遭遇することが多いため、その原因を理解して書き留めておく。
+---
+
+testing パッケージの `*testing.T` にある `Parallel()` 関数[^1]を使った並列テストにおいて、
+テストの規模が大きくなるに連れて MySQL 上で deadlock する機会が多くなっていた。使っているのは MySQL でバージョンは `mysql:8.0.26` である。
+
+複数のレコードを bulk insert するにあたって primary key をソートしておかないと deadlock するぞ、というのは良くある話だが、今回は単一レコードという条件だった。
+原因の調査でパターンを理解ししたので、その内容について書き留めておく。
+
+結果から書くと使っていた https://github.com/DATA-DOG/go-txdb と InnoDB のインデックスの振る舞いの相性が悪い。
+明示的に排他ロック共有ロックを取っている場合や transaction を使っている場合を除いて production で発生することはないので気にしないで良いケースが多い。
+
+[^1]: [Go言語でのテストの並列化 〜t.Parallel()メソッドを理解する〜 | メルカリエンジニアリング](https://engineering.mercari.com/blog/entry/how_to_use_t_parallel/)
+
+## 前提知識
+
+MySQL（InnoDB）のロックに関する用語がわかっていると良い。
+
+- [MySQL :: MySQL 8.0 Reference Manual :: 17.7.1 InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html)
+
+他に自分はこの辺のドキュメントを読んで理解を深めた。
+
+- [MySQL :: MySQL 8.0 Reference Manual :: 17.6.2.1 Clustered and Secondary Indexes](https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html)
+- [MySQL :: MySQL 8.0 Reference Manual :: 17.7.3 Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html)
+- [MySQL :: MySQL 8.0 Reference Manual :: 17.7.5.1 An InnoDB Deadlock Example](https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlock-example.html)
+
+## deadlock の状況
+
+testing パッケージにある並列実行を利用して DB にレコードを用意しつつテストを実行しているプロジェクトがあった。
+MySQL を起動しておいて https://github.com/DATA-DOG/go-txdb を使ったレコード管理をしており、プロジェクト規模はテストケースはそこまで多くない。
+deadlock していたのは特定のテーブルへの insert で、具体的には primary key やセカンダリインデックスに指定されているカラムに外部から値をセットしようとしているケースだった。
+
+今回の deadlock は MySQL 上で次のようなに再現させることができる。簡易的なテーブル `t1` を用意。
+
+```sql
+CREATE TABLE t1 (i INT, PRIMARY KEY (i)) ENGINE = InnoDB;
+```
+
+続いてセッションを3つ用意し、それぞれで次のクエリを実行する。
+
+```sql
+BEGIN;
+INSERT INTO t1 VALUES(1);
+```
+
+最初に起動したセッション1では `i = 1` のレコードに対して排他ロックを取得している状態になる。
+ロック状況を出力すると 2254, 2255, 2256 の thread がそれぞれセッション1,セッション2,セッション3とする。
+
+```sql
+mysql> SELECT ENGINE_TRANSACTION_ID as Trx_Id, OBJECT_NAME as `Table`, INDEX_NAME as `Index`, LOCK_DATA as Data, LOCK_MODE as Mode, LOCK_STATUS as Status, LOCK_TYPE as Type FROM performance_schema.data_locks;
++--------+-------+---------+------+---------------+---------+--------+
+| Trx_Id | Table | Index   | Data | Mode          | Status  | Type   |
++--------+-------+---------+------+---------------+---------+--------+
+|   2256 | t1    | NULL    | NULL | IX            | GRANTED | TABLE  |
+|   2256 | t1    | PRIMARY | 1    | S,REC_NOT_GAP | WAITING | RECORD |
+|   2255 | t1    | NULL    | NULL | IX            | GRANTED | TABLE  |
+|   2255 | t1    | PRIMARY | 1    | S,REC_NOT_GAP | WAITING | RECORD |
+|   2254 | t1    | NULL    | NULL | IX            | GRANTED | TABLE  |
+|   2254 | t1    | PRIMARY | 1    | X,REC_NOT_GAP | GRANTED | RECORD |
++--------+-------+---------+------+---------------+---------+--------+
+6 rows in set (0.00 sec)
+```
+
+ロック状況を見ると insert のための排他ロックはセッション1が持っていることがわかる。
+しかし、セッション2, セッション3 はなぜか共有ロックを待っている。これは InnoDB の仕様で、duplicate-key error が発生した insert は共有ロックを取りに行くかららしい。
+
+この状態で、排他ロックを持っているセッション1にて rollback を実行する。この rollback は txdb の cleanup 相当の意味を持つ。
+txdb は 単一のテーブルを使いまわしてテストを実行する関係上、各テストの実行ごとにトランザクションが貼られ、テストケース実行ごとに rollback が実行される。production でほぼ再現しないのはこれが理由になる。
+
+```sql
+ROLLBACK;
+```
+
+すると3つ目のセッションで deadlock が発生して実行に失敗する。その時点でのロック状況は以下。
+
+```sql
+mysql> SELECT ENGINE_TRANSACTION_ID as Trx_Id, OBJECT_NAME as `Table`, INDEX_NAME as `Index`, LOCK_DATA as Data, LOCK_MODE as Mode, LOCK_STATUS as Status, LOCK_TYPE as Type FROM performance_schema.data_locks;
++--------+-------+---------+------------------------+--------------------+---------+--------+
+| Trx_Id | Table | Index   | Data                   | Mode               | Status  | Type   |
++--------+-------+---------+------------------------+--------------------+---------+--------+
+|   2255 | t1    | NULL    | NULL                   | IX                 | GRANTED | TABLE  |
+|   2255 | t1    | PRIMARY | supremum pseudo-record | S                  | GRANTED | RECORD |
+|   2255 | t1    | PRIMARY | supremum pseudo-record | X,INSERT_INTENTION | GRANTED | RECORD |
+|   2255 | t1    | PRIMARY | 1                      | S,GAP              | GRANTED | RECORD |
++--------+-------+---------+------------------------+--------------------+---------+--------+
+4 rows in set (0.00 sec)
+```
+
+セッション2 は Insert intention lock を取得し、（transaction 内では）レコードを insert できていることになった。commit するとレコードは無事作成される。
+`show engine innodb status` で deadlock の様子を見てみる。
+
+```sql
+mysql> show engine innodb status\G
+...
+------------------------
+LATEST DETECTED DEADLOCK
+------------------------
+2024-06-19 16:55:01 140736789239552
+*** (1) TRANSACTION:
+TRANSACTION 2255, ACTIVE 9 sec inserting
+mysql tables in use 1, locked 1
+LOCK WAIT 4 lock struct(s), heap size 1128, 2 row lock(s)
+MySQL thread id 200, OS thread handle 140737222686464, query id 724 172.20.0.1 root update
+INSERT INTO t1 VALUES(1)
+
+*** (1) HOLDS THE LOCK(S):
+RECORD LOCKS space id 15 page no 4 n bits 72 index PRIMARY of table `clearance`.`t1` trx id 2255 lock mode S
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+ 0: len 8; hex 73757072656d756d; asc supremum;;
+
+
+*** (1) WAITING FOR THIS LOCK TO BE GRANTED:
+RECORD LOCKS space id 15 page no 4 n bits 72 index PRIMARY of table `clearance`.`t1` trx id 2255 lock_mode X insert intention waiting
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+ 0: len 8; hex 73757072656d756d; asc supremum;;
+
+
+*** (2) TRANSACTION:
+TRANSACTION 2256, ACTIVE 7 sec inserting
+mysql tables in use 1, locked 1
+LOCK WAIT 4 lock struct(s), heap size 1128, 2 row lock(s)
+MySQL thread id 201, OS thread handle 140737223276288, query id 726 172.20.0.1 root update
+INSERT INTO t1 VALUES(1)
+
+*** (2) HOLDS THE LOCK(S):
+RECORD LOCKS space id 15 page no 4 n bits 72 index PRIMARY of table `clearance`.`t1` trx id 2256 lock mode S
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+ 0: len 8; hex 73757072656d756d; asc supremum;;
+
+
+*** (2) WAITING FOR THIS LOCK TO BE GRANTED:
+RECORD LOCKS space id 15 page no 4 n bits 72 index PRIMARY of table `clearance`.`t1` trx id 2256 lock_mode X insert intention waiting
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+ 0: len 8; hex 73757072656d756d; asc supremum;;
+
+*** WE ROLL BACK TRANSACTION (2)
+...
+```
+
+何が起こっているかというと、セッション2, セッション3では duplicate-key error が発生して共有ロックを取得していた。
+その後取得した共有ロックを持った状態で2つのセッションが insert のために排他ロックを取ろうとするので、競合のためロックが取れずでセッション2とセッション3が deadlock に落ちる。
+
+つまり、以下のような条件下に発生している。
+
+- insert を実行しようとするテストケースが同時に3つ以上実行されている
+- インデックスが貼られている column に対して値を insert しようとしている
+- insert しようとしている値は各テストケースで同じ値である
+
+回避方法としては簡単で、インデックスの貼られている column へは複数のテストケースで同じ値を指定するのではなく、uuid や ulid など衝突しづらい値を利用すれば良い。
+
+挙動を理解はしたが duplicate-key error からの共有ロックを取りに行くのが謎なのでもう少し調査すると、例えば以下のようなケースで振る舞いに一貫性が持てなくなる。Lock 機構の都合かぁ。
+
+- [database - MySQL duplicate key error causes a shared lock set on the duplicate index record? - Stack Overflow](https://stackoverflow.com/questions/21111676/mysql-duplicate-key-error-causes-a-shared-lock-set-on-the-duplicate-index-record)
