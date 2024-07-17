@@ -43,14 +43,14 @@ export default async function Blog({ params }: BlogPageProps) {
   return (
     <section>
       <Link key={blog.slug} href={`/blog/${blog.slug}`}>
-        <div className="max-w-[750px]">
+        <div className="max-w-[770px]">
           <h1 className="font-bold text-3xl font-sans">{blog.title}</h1>
         </div>
       </Link>
       <time dateTime={blog.date} className="text-sm text-slate-600">
         {format(parseISO(blog.date), "LLLL d, yyyy")}
       </time>
-      <article className="prose max-w-[750px] prose-quoteless prose-neutral dark:prose-invert">
+      <article className="prose max-w-[770px] prose-quoteless prose-neutral dark:prose-invert">
         <MDXComponent />
       </article>
     </section>
