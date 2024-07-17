@@ -127,3 +127,9 @@ table {
 [data-rehype-pretty-code-title] + pre {
   @apply mt-0 rounded-t-none border-t-0;
 }
+
+[data-rehype-pretty-code-figure] {
+  pre > code {
+    line-height: 1.2;
+  }
+}
