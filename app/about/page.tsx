@@ -18,7 +18,7 @@ export default function About() {
     <section>
       <h1 className="font-bold text-3xl font-sans">About Me</h1>
       <p className="my-5 text-neutral-800 dark:text-neutral-200">
-        Yo, I{"'"}m Takamasa Saichi. also known as <b>s4cihi</b> on the web.
+        I{"'"}m Takamasa Saichi. also known as <b>s4cihi</b> on the internet.
       </p>
       <div className="prose max-w-[770px] prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
         <p>
