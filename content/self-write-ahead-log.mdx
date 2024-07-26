@@ -1,0 +1,55 @@
+---
+title: 割り込みに備えて Logseq で自身の WAL を残す
+date: 2024-07-27
+summary: 割り込みに備えて Logseq で自身の Write Ahead Log を残すことから始めよう
+---
+
+ソフトウェエンジニアとして、実装や調査の対象が複雑であればあるほど割り込みの弊害が深刻になる。
+作業量に応じて集中する時間が取れなくなってくると深夜や早朝など、人の居ない時間に作業を押し込めるようになり、生活リズムが崩れ、事態は悪化する（自分がそう）。
+
+最近 HN で [Use A Work Journal To Recover Focus Faster And Clarify Your Thoughts](https://fev.al/posts/work-journal/) という記事を見つけて、
+その弊害について自分が取り組んでいる方法が自分と似ていたのでより具体的な方法を書き留めておく。誰かのためになれば幸い。
+
+方針は簡単で、実装や調査において頭にパッと浮かんだアイデア・方針・気付きを少ない手数で残すこと。
+
+## Logseq
+
+Logseq というメモツールがある。
+箇条書きでメモを残せるツールだが、異様に拡張が整っていたり、痒いところに手が届く Config が書けたりして気遣い具合が心地よい。
+
+- [Logseq: A privacy-first, open-source knowledge base](https://logseq.com/)
+
+このツールの Journal という機能を活用する。他は正直使っていない。
+Journal は日毎のメモを残せる機能で、メモのログが時系列に残るようになる。
+日々の作業ログはここに全て記録していて、あとは TODO/DOING などの記法でタスク管理も軽くやっている ref: [Tasks](https://docs.logseq.com/#/page/tasks)
+
+## 作業ログを残す
+
+実装や調査の最中のメモはを全部 Logseq に残すことにしている。
+数十分で終わるようなものであれば使わないことが多いが、対象が巨大だったり、不慣れなプロジェクトに触る場合は思ったことを全部書き出している。
+
+とはいえ terminal を開いているのに Logseq に戻るのは面倒なので、Alfred 経由で journal へタイムスタンプ付きで投稿を可能にしている。
+[hdansou/logseq-alfred: Alfred Workflow for logseq](https://github.com/hdansou/logseq-alfred) などベースに拡張しているが、
+Logseq にある [Logseq Protocol](https://docs.logseq.com/#/page/logseq%20protocol?anchor=ls-block-6667036a-741e-454b-ac44-739d0a96c823) で URL 形式のアクションを書けるので、 workflow を組んでも良い。
+
+![](/self-write-ahead-log_alfred.png)
+
+と記載しておけばあとは logseq 上にこう記載される。
+これで作業中は Alfred のショートカット + `l` prefix とメモの内容をとにかく Logseq に送りつけている。
+
+![](/self-write-ahead-log_logseq.png)
+
+ちなみにデフォルトの quick capture のテンプレートはうるさいので上書きしてある。
+Logseq の Config って edn 形式のファイルなんだけどこれなに由来なんだろうか。
+
+```edn
+:quick-capture-templates
+{:text "**{time}**: {text}"
+ :media "**{time}**: {url}"}
+```
+
+## まぁログあるしな……
+
+こういう感じで思ったことや思考の分岐を乱雑にストックしておき、中断後に読み直す WAL (Write Ahead Log) のような使い方をしていくと、
+段々割り込みに対して「まぁログあるしな……」と心穏やかにでき、ないかも。割り込みは面倒なのは変わらない。
+ただ、脳内キャッシュの復帰までの速度を高める方法としてログを残すのは便利だし、Logseq はその使い方に向いている良いツールということを書きたかった。
