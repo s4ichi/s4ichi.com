@@ -156,6 +156,19 @@ export default function About() {
               <Link
                 rel="noopener noreferrer"
                 target="_blank"
+                href="https://www.docswell.com/s/s4ichi/KQR96J-gcd-authn-authz"
+              >
+                アーキテクチャConference 2024
+                <br />
+                「最大公約数的アーキテクチャで個別実装から脱却する～認証認可基盤の共通化に向けた取り組み～」
+              </Link>
+            </b>
+          </li>
+          <li>
+            <b>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
                 href="https://www.docswell.com/s/s4ichi/5RXQLG-cookpad-self-hosted-runner-infra"
               >
                 CI/CD Test Night #6 「開発者体験を改善し続けるための Self-hosted runner 運用基盤」
