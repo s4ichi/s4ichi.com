@@ -99,6 +99,24 @@ table {
   font-size: 80%;
 }
 
+.prose .footnotes {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.prose .footnotes a,
+.prose .footnotes code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.prose .footnotes ol {
+  padding-left: 1.25rem;
+  margin-left: 0;
+}
+
 [data-rehype-pretty-code-fragment] code {
   @apply grid min-w-full break-words rounded-none border-0 bg-transparent p-0 text-sm text-black;
   counter-reset: line;
