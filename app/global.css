@@ -47,6 +47,10 @@ html {
   @apply m-0;
 }
 
+.prose :not(pre) > code {
+  @apply break-words whitespace-normal;
+}
+
 .prose > :first-child {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;
