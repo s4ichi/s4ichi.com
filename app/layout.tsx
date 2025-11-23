@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   description: defaultDescription,
   openGraph: openGraph(),
   twitter: twitter(),
+  alternates: {
+    types: {
+      "application/rss+xml": "https://s4ichi.com/blog/feed.xml",
+    },
+  },
   robots: {
     index: true,
     follow: true,

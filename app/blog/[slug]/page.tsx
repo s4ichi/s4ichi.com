@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   return {
     title: blog.title,
     description: blog.summary,
-    openGraph: openGraph(blog.title, blog.summary, "article", `https://s4ichi.com${blog.url}`),
+    openGraph: openGraph(blog.title, blog.summary, "article", `https://s4ichi.com${blog.url}`, blog.publishedAt),
     twitter: twitter(blog.title, blog.summary),
   };
 }
@@ -39,6 +39,7 @@ export default async function Blog({ params }: BlogPageProps) {
   }
 
   const MDXComponent = getMDXComponent(blog.body.code);
+  const publishedAt = parseISO(blog.publishedAt);
 
   return (
     <section>
@@ -47,9 +48,9 @@ export default async function Blog({ params }: BlogPageProps) {
           <h1 className="font-bold text-3xl font-sans">{blog.title}</h1>
         </div>
       </Link>
-      <time dateTime={blog.date} className="text-sm text-slate-600">
-        {format(parseISO(blog.date), "LLLL d, yyyy")}
-      </time>
+      <div className="text-sm text-slate-600 flex items-baseline space-x-2 mb-2">
+        <time dateTime={blog.publishedAt}>{format(publishedAt, "LLLL d, yyyy")}</time>
+      </div>
       <article className="prose max-w-[770px] prose-quoteless prose-neutral dark:prose-invert">
         <MDXComponent />
       </article>

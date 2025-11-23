@@ -19,9 +19,9 @@ export const Blog = defineDocumentType(() => ({
       description: "The title of the blog",
       required: true,
     },
-    date: {
+    publishedAt: {
       type: "date",
-      description: "The date of the blog",
+      description: "The published date of the blog",
       required: true,
     },
     summary: {

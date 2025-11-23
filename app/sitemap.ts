@@ -3,7 +3,7 @@ import { allBlogs } from "contentlayer/generated";
 export default async function sitemap() {
   const blogs = allBlogs.map((blog) => ({
     url: `https://s4ichi.com/blog/${blog.slug}`,
-    lastModified: blog.date,
+    lastModified: blog.publishedAt,
   }));
 
   const routes = ['', '/blog', '/about'].map(
