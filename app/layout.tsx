@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import Sidebar from "components/sidebar";
 import { defaultTitle, defaultDescription, openGraph, twitter } from "components/metadata";
 import { Analytics } from "@vercel/analytics/react";
+import { GoogleAnalytics } from "@next/third-parties/google";
+
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://s4ichi.com"),
@@ -41,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Sidebar />
         <main className="flex-auto min-w-0 mt-6 md:mt-0 flex flex-col px-2 md:px-0">{children}</main>
         <Analytics />
+        {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
       </body>
     </html>
   );
