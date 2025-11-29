@@ -41,7 +41,7 @@ Opt-in リージョンは、アカウント単位でどのリージョンを利�
 
 ### Token Version（2019年~）
 
-Global endpoint から発行される token には version が存在する。
+Global endpoint から発行される token には version が存在する（Regional endpoints から発行される token は無関係）。
 デフォルトは Token Version 1 であり、STS の設定から Token Version 2 に切り替えることが可能である。
 
 - **Token Version 1**
@@ -107,7 +107,8 @@ Regional endpoints の利用を効果的にするためには AWS SDK や CLI �
 単に Regional endpoints の目的の一つである耐障害性やレイテンシの問題だけに焦点を当てたアップデートであるため、
 発行される token に対してなんら仕様変更は伴っていないことに注意したい。
 
-また、この振る舞いはデフォルト有効リージョンにのみ適用され、Opt-in リージョンでは従来通り `us-east-1` へリクエストが常に送られる。
+なお、この振る舞いはデフォルト有効リージョン内の VPC から Amazon DNS で解決されたリクエストに限られる。
+オンプレミス等 AWS 外の環境から sts.amazonaws.com にアクセスする場合や Opt-in リージョンでは引き続き `us-east-1` で処理される。
 
 ## まとめ
 
