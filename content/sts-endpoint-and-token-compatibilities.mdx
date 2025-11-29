@@ -1,0 +1,123 @@
+---
+title: "AWS STS の Global / Regional endpoint と temporary security token の互換性をまとめる"
+publishedAt: 2025-11-29T23:45:00+09:00
+summary: AWS STS の Global endpoint と Regional endpoints の違い、Token Version の互換性、opt-in リージョンで発生しうる非互換について整理した。誤った組み合わせで token を利用すると一部のリージョンで認証が失敗するため、現行仕様を踏まえた指針をまとめている。
+---
+
+AWS STS の挙動を調べていると、`AWS STS Global endpoint` と `AWS STS Regional endpoints` の扱いが複雑で、
+さらに token の互換性（Token Version 1 / 2）と opt-in リージョンとの関係も複雑である。
+2025年に Global endpoint の耐障害性対応も入っていて、いよいよ情報が散乱してきた。
+
+理解が曖昧なままマルチリージョン向けの仕組みを構築すると token を使えないケースを招いてしまうため、
+STS のエンドポイントの変遷と token 互換性まわりを調べ直した。
+
+## 用語・定義
+
+### AWS STS Global endpoint（2011年~）
+
+`https://sts.amazonaws.com` で提供される単一のエンドポイントで、STS が登場した当初から利用されてきた。
+内部的には長らく `us-east-1` のみで処理されていたが、現状は一部を除いたリージョンからのアクセスはそのリージョン内だけで処理される。
+
+### AWS STS Regional endpoints（2015年~）
+
+`https://sts.<region>.amazonaws.com` の形式で提供されるリージョン単位のエンドポイントである。
+STS を各リージョンで処理することで、`us-east-1` のみに依存した構造を避け、レイテンシと耐障害性を向上させる目的がある。
+基本的な利用方法や推奨される理由については Blog でも解説されている。
+
+- [How to use Regional AWS STS endpoints | AWS Security Blog](https://aws.amazon.com/blogs/security/how-to-use-regional-aws-sts-endpoints/)
+
+### デフォルト有効リージョンと Opt-in リージョン（2019年~）
+
+AWS のリージョンは2019年3月20日以前と以後でその扱いが異なる。
+以前に AWS へ追加されたリージョンは **デフォルト有効リージョン** として扱われ、
+アカウントの設定依らず最初から有効化されているリージョンである。
+一方で以後に AWS へ追加されたリージョンは **Opt-in リージョン**となる。
+これらのリージョンはアカウントから明示的に有効化しなければ利用することができない。
+
+- [Enable or disable AWS Regions in your account - AWS Account Management](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-regions.html)
+
+Opt-in リージョンは、アカウント単位でどのリージョンを利用可能にするかを明確に管理できるよう設計されており、
+不要なリージョンの利用防止や規制対応にも役立つ。
+
+### Token Version（2019年~）
+
+Global endpoint から発行される token には version が存在する。
+デフォルトは Token Version 1 であり、STS の設定から Token Version 2 に切り替えることが可能である。
+
+- **Token Version 1**
+  - デフォルト有効リージョンでのみ有効
+  - opt-in リージョンでは token が無効である
+- **Token Version 2**
+  - 全リージョンで有効
+  - ただしトークン長が増えるため保存するようなワークロードでは長さに関する非互換に注意する必要がある
+
+version の切り替えは Console もしくは以下のドキュメントで解説されている API から設定できる。
+
+- [Manage AWS STS in an AWS Region - AWS Identity and Access Management](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+
+Token Version 2（と、それ以前を Token Version 1 とする）導入の背景についてはっきりとした記述は見当たらない。
+Token Version 1 を全リージョン対応に拡張することには何らかの制約があったと推測されるが、AWS から公式に説明はされていない。
+
+## AWS STS エンドポイントと token の互換性（現行仕様）
+
+AWS STS で発行した token を利用する際、互換性を考える軸は次の3つである。
+
+- 発行元のエンドポイント
+- Global endpoint 利用時の Token Version
+- 利用先リージョン（デフォルト有効 / Opt-in）
+
+これらの組み合わせは現在次のように整理できる。
+
+| 発行元（STS エンドポイント） | Token Version | デフォルト有効リージョン | Opt-in リージョン |
+|-------|---------------|--------------------------|--------------------|
+| Regional endpoints | – | ✅ 有効 | ✅ 有効 |
+| Global endpoint | Version 1 | ✅ 有効 | ❌ 無効 |
+| Global endpoint | Version 2 | ✅ 有効 | ✅ 有効 |
+
+- Regional endpoints を利用した token は、リージョンの種別に依存しない
+  - **常に全リージョンで有効**
+- Global endpoint + Version 1 は仕様上デフォルト有効リージョン専用
+  - **Opt-in リージョンでは常に無効**
+- Global endpoint + Version 2 は "全リージョン有効" に拡張した動作
+  - **実質的に Regional endpoints と同等の互換性**
+
+上の表のとおり、問題になるのは Global endpoint かつ Token Version 1 の場合である。以下例。
+
+- 発行元: Global endpoint（Token Version 1）、利用先: `ap-northeast-1`
+  - ✅ 有効
+- 発行元: Global endpoint（Token Version 1）、利用先: `af-south-1`
+  - ❌️ 無効
+- 発行元: Global endpoint（Token Version 2）、利用先: `af-south-1`
+  - ✅️ 有効
+
+このことから、基本的に Regional endpoints を積極的に使っていくべきである（し推奨されている）。
+Regional endpoints の利用を効果的にするためには AWS SDK や CLI の更新をするだけで良いことがほとんどである。
+あとは、公式のアナウンスブログを参照して必要な設定を追加するのが最も早い。
+
+- [How to use Regional AWS STS endpoints | AWS Security Blog](https://aws.amazon.com/blogs/security/how-to-use-regional-aws-sts-endpoints/)
+
+## 2025年2月のGlobal endpoint のアップデートについて
+
+2025年2月のアナウンスで  Global endpoint へのアクセスがそのリクエストのローカルリージョン（`ap-northeast-1` からリクエストしたら `ap-northeast-1` ）で処理されるようになった。
+これは既存利用箇所が未だに Global endpoint を向いている既存ワークロードの可用性とレイテンシを改善するための変更として提供されている。
+
+- [Announcing upcoming changes to the AWS Security Token Service global endpoint | AWS Security Blog](https://aws.amazon.com/blogs/security/announcing-upcoming-changes-to-the-aws-security-token-service-global-endpoint/?utm_source=chatgpt.com)
+
+このアナウンスで勘違いしていたのだけど、更新後に発行される token は Regional endpoints のものではなく Global endpoint のものである。
+単に Regional endpoints の目的の一つである耐障害性やレイテンシの問題だけに焦点を当てたアップデートであるため、
+発行される token に対してなんら仕様変更は伴っていないことに注意したい。
+
+また、この振る舞いはデフォルト有効リージョンにのみ適用され、Opt-in リージョンでは従来通り `us-east-1` へリクエストが常に送られる。
+
+## まとめ
+
+AWS STS の挙動は、長く使われてきた Global endpoint と後から追加された Regional endpoints、
+さらに Token Version の違いが重なって分かりづらい構造になっている。
+特に Global endpoint が返す token の互換性は今も旧来の振る舞いに依存しており、
+Token Version 1 を利用している場合は、デフォルト有効リージョンと opt-in リージョンで結果が分かれてしまう。
+Regional endpoints と Token Version 2 の組み合わせではこの問題は生じず、全リージョンで一貫した動作になる。
+
+2025 年の Global endpoint の改善によって可用性は向上したものの、
+token 自体の仕様が変わったわけではないため、挙動の違いを正しく理解しておく必要がある。
+マルチリージョン構成で STS を扱う場面では、互換性を意識したエンドポイントの選択が重要であり、
+特に Regional endpoints を利用する設計にしておくと不要なトラブルを避けやすい。
