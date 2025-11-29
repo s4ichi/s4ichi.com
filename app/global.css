@@ -57,6 +57,18 @@ html {
   margin-bottom: 1.25em !important;
 }
 
+/* Unify list spacing (top-level and nested) */
+.prose :where(ul, ol):not(:where([class~="not-prose"] *)) {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.prose :where(ul > li, ol > li):not(:where([class~="not-prose"] *)) {
+  margin-top: 0.125em;
+  margin-bottom: 0.125em;
+  line-height: 1.4;
+}
+
 code[class*='language-'],
 pre[class*='language-'] {
   @apply text-neutral-50;
